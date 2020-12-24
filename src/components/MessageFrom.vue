@@ -1,6 +1,6 @@
 <template>
   <div class="MessageFrom">
-    <p class="authorName">From: {{author}}</p>
+    <p class="authorName">{{author}}</p>
     <div class="text"><p>{{msg}}</p></div>
     <p class="date">{{date}}</p>
   </div>

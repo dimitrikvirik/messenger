@@ -30,11 +30,11 @@ export default {
       const vm = this;
       if (vm.value !== '') {
         const params = new URLSearchParams();
-        params.append('msg', vm.value);
+        params.append('text', vm.value);
         params.append('name', vm.user)
         axios({
           method: 'post',
-          url: 'http://localhost:80/server.php',
+          url: this.$store.state.request_url,
           data: params
         }).then(function (response){
           console.log(response);

@@ -1,7 +1,7 @@
 <template>
   <div class="msgForm">
     <div class="messages">
-      <div v-for="msg in messages" v-bind:key="msg">
+      <div v-for="msg in messages" v-bind:key="msg.messageId">
         <MessageTo  v-if="checkUser(msg.name)"  :msg="msg.text"  :author="msg.name" :date="msg.createdDate"></MessageTo>
         <MessageFrom v-else  :msg="msg.text" :author="msg.name" :date="msg.createdDate"></MessageFrom>
       </div>
@@ -35,31 +35,41 @@ name: "MessengerForm",
   methods: {
     getMsg: function (){
       const vm = this;
-      axios.get('http://localhost:80/server.php',{
-         params: {
-           msgId: vm.msgId
-         }
-      }).then(function (response){
+      axios.get(this.$store.state.request_url + "message")
+          .then(function (response){
         let data = response.data;
         console.log(data);
         if(data) {
-          let content = {
-            text: response.data.msg,
-            name: response.data.name,
-            createdDate: response.data.createdDate,
-            id: vm.msgId
-          };
-          vm.msgId++;
-          vm.messages.push(content);
-
+          data.forEach(function (e){
+            //Message Read
+            let msgContent = {
+              text: e.text,
+              userId: e.userId,
+              createdDate: e.createDate,
+              id: e.messageId,
+              name: "test"
+            }
+            axios.get(vm.$store.state.request_url + "user/"+msgContent.id)
+              .then(function (response){
+                  //User Read
+                let userContent = {
+                  firstname: response.data.firstname,
+                  lastname: response.data.lastname,
+                  nickname: response.data.nickname
+                }
+                msgContent.name = userContent.nickname
+              });
+            vm.msgId = msgContent.id;
+            vm.messages.push(msgContent);
+          })
         }
       }).catch(function (error){
         console.log(error)
       });
     },
    setUser(){
-      let username = prompt("Enter username: ");
-      this.user = username;
+     // let username = prompt("Enter username: ");
+      this.user = 'dito';
    },
     checkUser(name){
       return name === this.user;
@@ -68,7 +78,7 @@ name: "MessengerForm",
 
   created() {
   const vm  = this;
-  setInterval(function (){vm.getMsg()}, 400);
+  vm.getMsg();
   this.setUser();
   }
 }

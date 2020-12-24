@@ -1,28 +1,33 @@
 <template>
   <div id="app">
-    <MessengerForm></MessengerForm>
+    <router-view/>
   </div>
 </template>
-
 <script>
-import MessengerForm from "@/components/MessengerForm";
-
+import M from 'materialize-css'
 export default {
-  name: 'App',
-  components: {
-      MessengerForm
+  mounted() {
+    M.AutoInit(undefined)
   }
 }
 </script>
-
 <style>
+#app{
+  width: 100%;
+  height: 100%;
+  position: absolute;
+}
 
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
+#nav {
+  padding: 30px;
+}
+
+#nav a {
+  font-weight: bold;
   color: #2c3e50;
-  margin-top: 30px;
+}
+
+#nav a.router-link-exact-active {
+  color: #42b983;
 }
 </style>
